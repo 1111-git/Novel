@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.entity.Novel">
+	<resultMap type="novel" id="novelMap">
+		<id property="novelid" column="novelid" />
+		<result property="novelname" column="novelname" />
+		<result property="image" column="image" />
+		<result property="cateid" column="cateid" />
+		<result property="author" column="author" />
+		<result property="addtime" column="addtime" />
+		<result property="hits" column="hits" />
+		<result property="contents" column="contents" />
+		<result property="catename" column="catename" />
+	</resultMap>
+	
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertNovel" parameterType="novel">  
+		<![CDATA[ 
+		insert into novel(novelid  , novelname  , image  , cateid  , author  , addtime  , hits  , contents ) values(#{novelid}  , #{novelname}   , #{image}   , #{cateid}   , #{author}   , #{addtime}   , #{hits}   , #{contents} )
+		]]>
+	</insert>
+	
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateNovel" parameterType="novel">
+		<![CDATA[ 
+		update novel set  novelname=#{novelname}  , image=#{image}  , cateid=#{cateid}  , author=#{author}  , addtime=#{addtime}  , hits=#{hits}  , contents=#{contents}  where novelid=#{novelid}
+		]]>
+	</update>
+	
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteNovel" parameterType="String">
+		<![CDATA[
+		delete from novel where novelid = #{novelid}
+		]]>
+	</delete>
+	
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllNovel" resultMap="novelMap">
+		select a.* , b.catename from
+		novel a , cate b where a.cateid = b.cateid order by novelid desc
+	</select>
+	<select id="getHotNovel" resultMap="novelMap">
+		select a.* , b.catename from
+		novel a , cate b where a.cateid = b.cateid order by hits desc limit 5
+	</select>
+	<select id="getNewsNovel" resultMap="novelMap">
+		select a.* , b.catename from
+		novel a , cate b where a.cateid = b.cateid order by novelid desc limit 4
+	</select>
+	
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getNovelById" parameterType="String" resultMap="novelMap">
+		select a.* , b.catename from novel a , cate b where a.cateid =
+		b.cateid and novelid=#{novelid} order by novelid desc
+	</select>
+	<select id="getFrontNovel" parameterType="String" resultMap="novelMap">
+		select a.* , b.catename from novel a , cate b where a.cateid =
+		b.cateid and a.cateid=#{cateid} order by hits desc limit 5
+	</select>
+	
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getNovelByCond" parameterType="novel" resultMap="novelMap">
+		select a.* , b.catename from novel a , cate b where a.cateid =
+		b.cateid
+		<if test="novelname != null and '' != novelname">
+			and a.novelname = #{novelname}
+		</if>
+		<if test="image != null and '' != image">
+			and a.image = #{image}
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and a.cateid = #{cateid}
+		</if>
+		<if test="author != null and '' != author">
+			and a.author = #{author}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits = #{hits}
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents = #{contents}
+		</if>
+	</select>
+	
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getNovelByLike" parameterType="novel" resultMap="novelMap">
+		select a.* , b.catename from novel a , cate b where a.cateid =
+		b.cateid
+		<if test="novelname != null and '' != novelname">
+			and a.novelname like CONCAT('%', CONCAT(#{novelname},
+			'%'))
+		</if>
+		<if test="image != null and '' != image">
+			and a.image like CONCAT('%', CONCAT(#{image}, '%'))
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and b.catename like CONCAT('%', CONCAT(#{cateid}, '%'))
+		</if>
+		<if test="author != null and '' != author">
+			and a.author like CONCAT('%', CONCAT(#{author}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits like CONCAT('%', CONCAT(#{hits}, '%'))
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents like CONCAT('%', CONCAT(#{contents}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

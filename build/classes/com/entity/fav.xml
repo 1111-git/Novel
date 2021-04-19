@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.entity.Fav">
+	<resultMap type="fav" id="favMap">
+		<id property="favid" column="favid" />
+		<result property="usersid" column="usersid" />
+		<result property="novelid" column="novelid" />
+		<result property="addtime" column="addtime" />
+		<result property="username" column="username" />
+		<result property="novelname" column="novelname" />
+	</resultMap>
+	
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertFav" parameterType="fav">  
+		<![CDATA[ 
+		insert into fav(favid  , usersid  , novelid  , addtime ) values(#{favid}  , #{usersid}   , #{novelid}   , #{addtime} )
+		]]>
+	</insert>
+	
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateFav" parameterType="fav">
+		<![CDATA[ 
+		update fav set  usersid=#{usersid}  , novelid=#{novelid}  , addtime=#{addtime}  where favid=#{favid}
+		]]>
+	</update>
+	
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteFav" parameterType="String">
+		<![CDATA[
+		delete from fav where favid = #{favid}
+		]]>
+	</delete>
+	
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllFav" resultMap="favMap">
+		<![CDATA[ 
+		select a.* , b.username , c.novelname from fav a , users b , novel c where a.usersid = b.usersid and a.novelid = c.novelid order by favid desc
+		]]>
+	</select>
+	
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getFavById" parameterType="String" resultMap="favMap">
+		<![CDATA[ 
+		select a.* , b.username , c.novelname from fav a , users b , novel c where a.usersid = b.usersid and a.novelid = c.novelid and favid=#{favid} order by favid desc
+		]]>
+	</select>
+	
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getFavByCond" parameterType="fav" resultMap="favMap">
+		select a.* , b.username , c.novelname from fav a , users b , novel c
+		where a.usersid = b.usersid and a.novelid = c.novelid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid = #{usersid}
+		</if>
+		<if test="novelid != null and '' != novelid">
+			and c.novelid = #{novelid}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+	</select>
+	
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getFavByLike" parameterType="fav" resultMap="favMap">
+		select a.* , b.username , c.novelname from fav a , users b , novel c
+		where a.usersid = b.usersid and a.novelid = c.novelid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid like CONCAT('%', CONCAT(#{usersid}, '%')) 
+		</if>
+		<if test="novelid != null and '' != novelid">
+			and b.username like CONCAT('%', CONCAT(#{novelid}, '%')) 
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and c.novelname like CONCAT('%', CONCAT(#{addtime}, '%')) 
+		</if>
+	</select>
+</mapper>
+
+

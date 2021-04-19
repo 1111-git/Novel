@@ -1,0 +1,1 @@
+function check(){if(document.myform.usersid.value==''){alert('请输入用户'); return false; }if(document.myform.novelid.value==''){alert('请输入小说'); return false; }if(document.myform.addtime.value==''){alert('请输入收藏日期'); return false; }}

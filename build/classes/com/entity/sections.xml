@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.entity.Sections">
+	<resultMap type="sections" id="sectionsMap">
+		<id property="sectionsid" column="sectionsid" />
+		<result property="title" column="title" />
+		<result property="novelid" column="novelid" />
+		<result property="contents" column="contents" />
+		<result property="addtime" column="addtime" />
+		<result property="hits" column="hits" />
+		<result property="thepre" column="thepre" />
+		<result property="thenext" column="thenext" />
+		<result property="novelname" column="novelname" />
+	</resultMap>
+	
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertSections" parameterType="sections">  
+		<![CDATA[ 
+		insert into sections(sectionsid  , title  , novelid  , contents  , addtime  , hits  , thepre  , thenext ) values(#{sectionsid}  , #{title}   , #{novelid}   , #{contents}   , #{addtime}   , #{hits}   , #{thepre}   , #{thenext} )
+		]]>
+	</insert>
+	
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateSections" parameterType="sections">
+		<![CDATA[ 
+		update sections set  title=#{title}  , novelid=#{novelid}  , contents=#{contents}  , addtime=#{addtime}  , hits=#{hits}  , thepre=#{thepre}  , thenext=#{thenext}  where sectionsid=#{sectionsid}
+		]]>
+	</update>
+	
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteSections" parameterType="String">
+		<![CDATA[
+		delete from sections where sectionsid = #{sectionsid}
+		]]>
+	</delete>
+	
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllSections" resultMap="sectionsMap">
+		<![CDATA[ 
+		select a.* , b.novelname from sections a , novel b where a.novelid = b.novelid order by sectionsid desc
+		]]>
+	</select>
+	
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getSectionsById" parameterType="String" resultMap="sectionsMap">
+		<![CDATA[ 
+		select a.* , b.novelname from sections a , novel b where a.novelid = b.novelid and sectionsid=#{sectionsid} order by sectionsid desc
+		]]>
+	</select>
+	
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getSectionsByCond" parameterType="sections"
+		resultMap="sectionsMap">
+		select a.* , b.novelname from sections a , novel b where a.novelid =
+		b.novelid
+		<if test="title != null and '' != title">
+			and a.title = #{title}
+		</if>
+		<if test="novelid != null and '' != novelid">
+			and a.novelid = #{novelid}
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents = #{contents}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits = #{hits}
+		</if>
+		<if test="thepre != null and '' != thepre">
+			and a.thepre = #{thepre}
+		</if>
+		<if test="thenext != null and '' != thenext">
+			and a.thenext = #{thenext}
+		</if>
+	</select>
+	
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getSectionsByLike" parameterType="sections"
+		resultMap="sectionsMap">
+		select a.* , b.novelname from sections a , novel b where a.novelid =
+		b.novelid
+		<if test="title != null and '' != title">
+			and a.title like CONCAT('%', CONCAT(#{title}, '%')) 
+		</if>
+		<if test="novelid != null and '' != novelid">
+			and a.novelid like CONCAT('%', CONCAT(#{novelid}, '%')) 
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents like CONCAT('%', CONCAT(#{contents}, '%')) 
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%')) 
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits like CONCAT('%', CONCAT(#{hits}, '%')) 
+		</if>
+		<if test="thepre != null and '' != thepre">
+			and a.thepre like CONCAT('%', CONCAT(#{thepre}, '%')) 
+		</if>
+		<if test="thenext != null and '' != thenext">
+			and a.thenext like CONCAT('%', CONCAT(#{thenext}, '%')) 
+		</if>
+	</select>
+</mapper>
+
+
